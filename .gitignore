@@ -26,3 +26,13 @@
 *.exe
 *.out
 *.app
+
+# IPython
+.ipynb_checkpoints
+
+# LaTeX
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex*

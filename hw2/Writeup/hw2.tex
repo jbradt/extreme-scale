@@ -1,0 +1,103 @@
+\documentclass{article}
+
+\usepackage{siunitx}
+\usepackage{booktabs}
+\usepackage{graphicx}
+% \usepackage{minted}
+
+\frenchspacing
+
+\title{Homework 2}
+\author{Josh Bradt}
+\date{February 1, 2016}
+
+\begin{document}
+
+\maketitle
+
+\section{Array copy performance}
+
+I ran this test on my Late-2012 Mac Mini with quad-core Intel Core i7-3615QM processor. This processor has \SI{64}{kB} L1 cache per core, \SI{256}{kB} L2 cache per core, and \SI{6}{MB} L3 cache which is shared between the cores. The computer has \SI{16}{GB} of RAM installed. The operating system is Mac OS X El Capitan (10.11.2).
+
+All codes were compiled using the default Apple-provided Clang version 7.0.2 with optimization level -O2.
+
+The results for this section are shown in Table~\ref{tab:part1}. Note that I was unable to run the test for an array size of \num{5000000} since OS X sets a hard limit of \SI{65532}{kB} on the stack size which cannot be bypassed with \texttt{ulimit -s}.
+
+\begin{table}[b]
+\centering
+\begin{tabular}{@{}rcc@{}}
+\toprule
+N         & Time for Loop (s) & Rate (MB/s) \\ \midrule
+\num{250}       & \num{4.76E-08}          & \num{8.40E+04}    \\
+\num{1000}     & \num{1.80E-07}          & \num{8.89E+04}    \\
+\num{5000}     & \num{1.85E-06}          & \num{4.33E+04}    \\
+\num{10000}    & \num{3.63E-06}          & \num{4.41E+04}    \\
+\num{50000}    & \num{2.28E-05}          & \num{3.51E+04}    \\
+\num{100000}   & \num{4.52E-05}          & \num{3.54E+04}    \\
+\num{500000}   & \num{3.68E-04}          & \num{2.17E+04}    \\
+\num{1000000} & \num{8.78E-04}          & \num{1.82E+04}    \\
+\num{5000000} & (Failed)          & (Failed)    \\ \bottomrule
+\end{tabular}
+\caption{Results from Part 1}
+\label{tab:part1}
+\end{table}
+
+The time results are plotted in Fig.~\ref{fig:p1time}, and the data rates are plotted in Fig.~\ref{fig:p1rate}.
+
+\begin{figure}
+    \centering
+    \includegraphics{p1time.pdf}
+    \caption{Time per loop for Part 1.}
+    \label{fig:p1time}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics{p1rate.pdf}
+    \caption{Data rate for Part 1.}
+    \label{fig:p1rate}
+\end{figure}
+
+\section{STREAM benchmark}
+
+I ran the C version of the STREAM benchmark on the same system as above, compiled as above with \texttt{clang -O2}. The array size was set to \num{3000000}, which produced an array size of \SI{22.9}{MiB}. This is more than 4 times the size of the \SI{6}{MB} L3 cache on this system.
+
+The results of the benchmark are shown in Table~\ref{tab:stream}.
+
+\begin{table}[]
+\centering
+\begin{tabular}{@{}rrrrr@{}}
+\toprule
+\textbf{Function} & Best rate {[}GB/s{]} & Avg time {[}ms{]} & Min time {[}ms{]} & Max time {[}ms{]} \\ \midrule
+\textbf{Copy}     & 16.5                 & 3.14              & 2.89              & 4.12              \\
+\textbf{Scale}    & 12.3                 & 4.25              & 3.92              & 5.28              \\
+\textbf{Add}      & 12.7                 & 5.99              & 5.67              & 6.41              \\
+\textbf{Triad}    & 12.7                 & 6.09              & 5.66              & 6.62              \\ \bottomrule
+\end{tabular}
+\caption{STREAM results}
+\label{tab:stream}
+\end{table}
+
+\section{Sparse matrix-vector multiply performance estimate}
+
+If we ignore the effects of the cache, then the estimate given on slide 8 in lecture 5 is:
+\begin{equation}
+    \text{time} = n_{NZ}(2c + 2.5r) + n (0.5r + w)
+\end{equation}
+where $n$ is the number of rows, $n_{nz}$ is the number of nonzero elements, $c$ is the time per operation, $r$ is the time per read, and $w$ is the time per write.
+
+The STREAM copy operation performs one read and one write, so take
+\[
+    r = w = \frac{t_{copy}}{2N} = \frac{\SI{3.14}{ms}}{2 \cdot \num{3000000}} = \SI{0.523}{ns}.
+\]
+If the processor can perform one floating point operation per clock cycle, then the processor clock speed suggests that $c = 1 / (\SI{2.3e9}{Hz}) = \SI{0.435}{ns}$. Thus, the time should be
+\begin{equation}
+    \text{time} = n_{NZ}(\SI{2.18}{ns}) + n (\SI{0.785}{ns}).
+\end{equation}
+
+For an example, assume we have a $\num{1000000}\times\num{1000000}$ tridiagonal matrix. This has approximately \num{3000000} nonzero elements. Therefore, the time for the sparse matrix-vector multiply should be approximately
+\[
+    \text{time} = \num{3000000}(\SI{2.18}{ns}) + \num{1000000}(\SI{0.785}{ns}) = \SI{7.33}{ms}.
+\]
+
+
+\end{document}
