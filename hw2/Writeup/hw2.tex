@@ -6,6 +6,8 @@
 % \usepackage{minted}
 
 \frenchspacing
+\setlength{\parindent}{0ex}
+\setlength{\parskip}{2 ex plus 2 ex minus 1 ex}
 
 \title{Homework 2}
 \author{Josh Bradt}
@@ -17,7 +19,7 @@
 
 \section{Array copy performance}
 
-I ran this test on my Late-2012 Mac Mini with quad-core Intel Core i7-3615QM processor. This processor has \SI{64}{kB} L1 cache per core, \SI{256}{kB} L2 cache per core, and \SI{6}{MB} L3 cache which is shared between the cores. The computer has \SI{16}{GB} of RAM installed. The operating system is Mac OS X El Capitan (10.11.2).
+I ran this test on my Late-2012 Mac Mini with a quad-core, \SI{2.3}{GHz} Intel Core i7-3615QM processor. This processor has \SI{64}{kB} L1 cache per core, \SI{256}{kB} L2 cache per core, and \SI{6}{MB} L3 cache which is shared between the cores. The computer has \SI{16}{GB} of RAM installed. The operating system is Mac OS X El Capitan (10.11.2).
 
 All codes were compiled using the default Apple-provided Clang version 7.0.2 with optimization level -O2.
 
@@ -79,25 +81,11 @@ The results of the benchmark are shown in Table~\ref{tab:stream}.
 
 \section{Sparse matrix-vector multiply performance estimate}
 
-If we ignore the effects of the cache, then the estimate given on slide 8 in lecture 5 is:
-\begin{equation}
-    \text{time} = n_{NZ}(2c + 2.5r) + n (0.5r + w)
-\end{equation}
-where $n$ is the number of rows, $n_{nz}$ is the number of nonzero elements, $c$ is the time per operation, $r$ is the time per read, and $w$ is the time per write.
+Based on the analysis in Lecture 4, the processor needs to load approximately 1 double and 1 integer for each floating point operation (assuming a single operation for multiply-add). This amounts to \SI{12}{B/FLOP}.
 
-The STREAM copy operation performs one read and one write, so take
-\[
-    r = w = \frac{t_{copy}}{2N} = \frac{\SI{3.14}{ms}}{2 \cdot \num{3000000}} = \SI{0.523}{ns}.
-\]
-If the processor can perform one floating point operation per clock cycle, then the processor clock speed suggests that $c = 1 / (\SI{2.3e9}{Hz}) = \SI{0.435}{ns}$. Thus, the time should be
-\begin{equation}
-    \text{time} = n_{NZ}(\SI{2.18}{ns}) + n (\SI{0.785}{ns}).
-\end{equation}
+The STREAM results show that the processor can move about \SI{16.5}{GB/s} to or from memory. If the clock frequency is \SI{2.3}{GHz}, then this is \SI{7.2}{B/cycle}. Assuming the processor can perform \SI{1}{FLOP/cycle}, this means that it can move \SI{7.2}{B/FLOP}.
 
-For an example, assume we have a $\num{1000000}\times\num{1000000}$ tridiagonal matrix. This has approximately \num{3000000} nonzero elements. Therefore, the time for the sparse matrix-vector multiply should be approximately
-\[
-    \text{time} = \num{3000000}(\SI{2.18}{ns}) + \num{1000000}(\SI{0.785}{ns}) = \SI{7.33}{ms}.
-\]
+Thus, the expected performance is $(\SI{7.2}{B/FLOP}) / (\SI{12}{B/FLOP}) = \SI{60}{\percent}$ of the peak performance. This equals $0.6 \times \SI{2.3}{GFLOPS} = \SI{1.38}{GFLOPS}$.
 
 
 \end{document}
