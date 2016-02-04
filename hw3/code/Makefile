@@ -2,7 +2,7 @@ CC=clang
 
 CFLAGS=-Wall -O0
 
-all: trans blocktrans
+all: trans blocktrans cotrans
 .PHONY: all
 
 trans: transpose.c mysecond.c
@@ -11,6 +11,9 @@ trans: transpose.c mysecond.c
 blocktrans: block_transpose.c mysecond.c
 	$(CC) $(CFLAGS) -o $@ $^
 
+cotrans: cotranspose.c
+	$(CC) $(CFLAGS) -o $@ $^
+
 .PHONY: clean
 clean:
-	rm -rf *.o trans blocktrans
+	rm -rf *.o trans blocktrans cotrans
