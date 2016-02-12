@@ -11,11 +11,14 @@
 
 cd /mnt/home/jbradt/Documents/Code/extreme-scale/hw4/code
 
-for OLEVEL in ("0" "1" "2" "3")
+OLEVELS=("0" "1" "2" "3")
+DIMS=("20" "100" "200" "800" "1000" "1200" "1600" "1800" "2000")
+
+for OLEVEL in "${OLEVELS[@]}"
 do
     echo "Optimization level O$OLEVEL"
 
-    for DIM in ("20" "100" "200" "800" "1000" "1200" "1600" "1800" "2000")
+    for DIM in "${DIMS[@]}"
     do
         echo "For N=$DIM"
 
