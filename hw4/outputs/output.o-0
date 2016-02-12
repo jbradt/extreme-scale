@@ -1,0 +1,142 @@
+Optimization level O0
+For N=20
+Regular mult. took 5.6982e-05 s. Will iterate 17549 times.
+Blocked mult. took 4.1008e-05 s. Will iterate 24385 times.
+
+Timings: (in seconds)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 5.3983e-05  5.3867e-05  5.3923e-05
+Blocked: 3.9229e-05  3.9094e-05  3.9179e-05
+
+Performance: (in FLOPS)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 2.9639e+08  2.9703e+08  2.9672e+08
+Blocked: 4.0786e+08  4.0927e+08  4.0838e+08
+For N=100
+Regular mult. took 6.1791e-03 s. Will iterate 162 times.
+Blocked mult. took 5.0230e-03 s. Will iterate 199 times.
+
+Timings: (in seconds)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 6.1661e-03  6.1618e-03  6.1636e-03
+Blocked: 4.9573e-03  4.9126e-03  4.9304e-03
+
+Performance: (in FLOPS)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 3.2436e+08  3.2458e+08  3.2449e+08
+Blocked: 4.0344e+08  4.0712e+08  4.0564e+08
+For N=200
+Regular mult. took 5.0744e-02 s. Will iterate 20 times.
+Blocked mult. took 4.0172e-02 s. Will iterate 25 times.
+
+Timings: (in seconds)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 5.1864e-02  5.0617e-02  5.0907e-02
+Blocked: 4.0868e-02  3.9550e-02  3.9889e-02
+
+Performance: (in FLOPS)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 3.0850e+08  3.1610e+08  3.1430e+08
+Blocked: 3.9150e+08  4.0456e+08  4.0111e+08
+For N=800
+
+Timings: (in seconds)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 4.3309e+00  3.7693e+00  4.1704e+00
+Blocked: 2.6212e+00  2.5404e+00  2.5610e+00
+
+Performance: (in FLOPS)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 2.3644e+08  2.7167e+08  2.4554e+08
+Blocked: 3.9066e+08  4.0309e+08  3.9984e+08
+For N=1000
+
+Timings: (in seconds)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 8.5991e+00  8.5074e+00  8.5328e+00
+Blocked: 5.1279e+00  5.0844e+00  5.1060e+00
+
+Performance: (in FLOPS)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 2.3258e+08  2.3509e+08  2.3439e+08
+Blocked: 3.9003e+08  3.9336e+08  3.9170e+08
+For N=1200
+
+Timings: (in seconds)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 1.4753e+01  1.4334e+01  1.4561e+01
+Blocked: 8.8055e+00  8.6465e+00  8.7360e+00
+
+Performance: (in FLOPS)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 2.3425e+08  2.4111e+08  2.3735e+08
+Blocked: 3.9248e+08  3.9970e+08  3.9561e+08
+For N=1600
+
+Timings: (in seconds)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 3.9480e+01  3.9108e+01  3.9284e+01
+Blocked: 2.1556e+01  2.0822e+01  2.1205e+01
+
+Performance: (in FLOPS)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 2.0750e+08  2.0947e+08  2.0853e+08
+Blocked: 3.8003e+08  3.9343e+08  3.8633e+08
+For N=1800
+
+Timings: (in seconds)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 4.9861e+01  4.9342e+01  4.9592e+01
+Blocked: 3.0339e+01  2.9603e+01  3.0079e+01
+
+Performance: (in FLOPS)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 2.3393e+08  2.3639e+08  2.3520e+08
+Blocked: 3.8446e+08  3.9401e+08  3.8778e+08
+For N=2000
+
+Timings: (in seconds)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 7.5013e+01  7.3421e+01  7.3766e+01
+Blocked: 4.1213e+01  3.9465e+01  4.0306e+01
+
+Performance: (in FLOPS)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 2.1330e+08  2.1792e+08  2.1690e+08
+Blocked: 3.8822e+08  4.0542e+08  3.9697e+08

@@ -1,0 +1,143 @@
+Optimization level O1
+For N=20
+Regular mult. took 2.2888e-05 s. Will iterate 43691 times.
+Blocked mult. took 8.8215e-06 s. Will iterate 113360 times.
+
+Timings: (in seconds)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 2.7429e-05  2.2258e-05  2.3378e-05
+Blocked: 9.1877e-06  8.5083e-06  8.6907e-06
+
+Performance: (in FLOPS)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 5.8332e+08  7.1886e+08  6.8442e+08
+Blocked: 1.7415e+09  1.8805e+09  1.8411e+09
+For N=100
+Regular mult. took 2.9440e-03 s. Will iterate 340 times.
+Blocked mult. took 1.0629e-03 s. Will iterate 941 times.
+
+Timings: (in seconds)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 3.3832e-03  2.9149e-03  3.1543e-03
+Blocked: 1.2312e-03  1.0533e-03  1.1488e-03
+
+Performance: (in FLOPS)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 5.9115e+08  6.8612e+08  6.3405e+08
+Blocked: 1.6244e+09  1.8988e+09  1.7409e+09
+For N=200
+Regular mult. took 4.7006e-02 s. Will iterate 21 times.
+Blocked mult. took 1.7108e-02 s. Will iterate 58 times.
+
+Timings: (in seconds)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 2.5225e-02  2.4103e-02  2.4529e-02
+Blocked: 8.4927e-03  8.3208e-03  8.4377e-03
+
+Performance: (in FLOPS)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 6.3430e+08  6.6381e+08  6.5228e+08
+Blocked: 1.8840e+09  1.9229e+09  1.8963e+09
+For N=800
+Blocked mult. took 5.3299e-01 s. Will iterate 2 times.
+
+Timings: (in seconds)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 2.2189e+00  1.8480e+00  2.0912e+00
+Blocked: 6.6536e-01  5.6706e-01  6.1867e-01
+
+Performance: (in FLOPS)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 4.6149e+08  5.5410e+08  4.8967e+08
+Blocked: 1.5390e+09  1.8058e+09  1.6552e+09
+For N=1000
+
+Timings: (in seconds)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 4.0750e+00  3.9598e+00  4.0308e+00
+Blocked: 1.1025e+00  1.0683e+00  1.0802e+00
+
+Performance: (in FLOPS)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 4.9080e+08  5.0507e+08  4.9618e+08
+Blocked: 1.8141e+09  1.8720e+09  1.8515e+09
+For N=1200
+
+Timings: (in seconds)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 7.8051e+00  6.8025e+00  7.2508e+00
+Blocked: 2.2031e+00  1.8329e+00  1.9786e+00
+
+Performance: (in FLOPS)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 4.4279e+08  5.0805e+08  4.7664e+08
+Blocked: 1.5687e+09  1.8856e+09  1.7466e+09
+For N=1600
+
+Timings: (in seconds)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 1.9479e+01  1.8917e+01  1.9182e+01
+Blocked: 4.9868e+00  4.3343e+00  4.6196e+00
+
+Performance: (in FLOPS)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 4.2056e+08  4.3304e+08  4.2706e+08
+Blocked: 1.6427e+09  1.8900e+09  1.7733e+09
+For N=1800
+
+Timings: (in seconds)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 2.8133e+01  2.4334e+01  2.5957e+01
+Blocked: 7.1770e+00  6.1716e+00  6.6729e+00
+
+Performance: (in FLOPS)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 4.1461e+08  4.7933e+08  4.4935e+08
+Blocked: 1.6252e+09  1.8900e+09  1.7480e+09
+For N=2000
+
+Timings: (in seconds)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 3.8253e+01  3.5448e+01  3.6877e+01
+Blocked: 9.9556e+00  8.8880e+00  9.3936e+00
+
+Performance: (in FLOPS)
+
+            Max         Min         Mean   
+         ----------  ----------  ----------
+Regular: 4.1827e+08  4.5136e+08  4.3388e+08
+Blocked: 1.6071e+09  1.8002e+09  1.7033e+09

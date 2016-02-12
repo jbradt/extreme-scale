@@ -1,6 +1,6 @@
 CC=icc
 
-CFLAGS=-Wall -O3 -std=c11
+CFLAGS=-Wall -O0 -std=c11
 
 EXEC=mmul
 SOURCES = $(wildcard *.c)
