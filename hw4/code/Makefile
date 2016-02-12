@@ -10,9 +10,6 @@ OBJECTS = $(SOURCES:.c=.o)
 $(EXEC): $(OBJECTS)
 	$(CC) $(OBJECTS) -o $(EXEC)
 
-%.o: %.cpp
-	$(CC) -c $(CFLAGS) $< -o $@
-
 .PHONY: clean
 clean:
 	rm -f $(EXEC) $(OBJECTS)

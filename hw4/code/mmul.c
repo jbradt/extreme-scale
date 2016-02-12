@@ -24,6 +24,7 @@ void matrixMultiply(const double* matA, const double* matB, double* out, const s
             double sum = 0;
             for (size_t k = 0; k < matSize; k++) {
                 sum += matA[ind(i,k)] * matB[ind(k,j)];
+                dummy(matA);
             }
             out[ind(i,j)] = sum;
         }
@@ -66,6 +67,14 @@ int main(const int argc, const char** argv)
         matSize = atoi(argv[1]);
     }
 
+    int numReps = 5;
+    if (argc > 2) {
+        numReps = atoi(argv[2]);
+    }
+
+    int innerLoopSize = 1;
+    int blockInnerLoopSize = 1;
+
     double* matA = malloc(matSize * matSize * sizeof(double));
     double* matB = malloc(matSize * matSize * sizeof(double));
     double* matC = malloc(matSize * matSize * sizeof(double));
@@ -78,33 +87,56 @@ int main(const int argc, const char** argv)
     double blockMaxTime = 0;
     double blockTotTime = 0;
 
-    const int numReps = 10;
 
-    for (int rep = 0; rep < numReps; rep++) {
+    for (int rep = -1; rep < numReps; rep++) {
         fillMatrix(matA, matSize, 1);
         fillMatrix(matB, matSize, 2);
         fillMatrix(matC, matSize, 0);
         fillMatrix(matD, matSize, 0);
 
         double begin = mysecond();
-        matrixMultiply(matA, matB, matC, matSize);
+        for (int innerIter = 0; innerIter < innerLoopSize; innerIter++) {
+            matrixMultiply(matA, matB, matC, matSize);
+        }
         double end = mysecond();
 
+        double timeTaken = end - begin;
+
+        if (rep < 0) {
+            if (timeTaken < 1) {
+                innerLoopSize = round(1 / timeTaken);
+                printf("Regular mult. took %0.4e s. Will iterate %d times.\n", timeTaken, innerLoopSize);
+            }
+        }
+
         double block_begin = mysecond();
-        blockedMatrixMultiply(matA, matB, matD, matSize);
+        for (int innerIter = 0; innerIter < blockInnerLoopSize; innerIter++) {
+            blockedMatrixMultiply(matA, matB, matD, matSize);
+        }
         double block_end = mysecond();
 
-        double timeTaken = end - begin;
         double blockTimeTaken = block_end - block_begin;
 
-        totTime += timeTaken;
-        blockTotTime += timeTaken;
+        if (rep < 0) {
+            if (blockTimeTaken < 1) {
+                blockInnerLoopSize = round(1 / blockTimeTaken);
+                printf("Blocked mult. took %0.4e s. Will iterate %d times.\n", blockTimeTaken, blockInnerLoopSize);
+            }
+        }
 
-        if (timeTaken > maxTime || rep == 0) maxTime = timeTaken;
-        if (blockTimeTaken > blockMaxTime || rep == 0) blockMaxTime = blockTimeTaken;
+        if (rep >= 0) {
+            timeTaken /= innerLoopSize;
+            blockTimeTaken /= blockInnerLoopSize;
 
-        if (timeTaken < minTime || rep == 0) minTime = timeTaken;
-        if (blockTimeTaken < blockMinTime || rep == 0) blockMinTime = blockTimeTaken;
+            totTime += timeTaken;
+            blockTotTime += blockTimeTaken;
+
+            if (timeTaken > maxTime || rep == 0) maxTime = timeTaken;
+            if (blockTimeTaken > blockMaxTime || rep == 0) blockMaxTime = blockTimeTaken;
+
+            if (timeTaken < minTime || rep == 0) minTime = timeTaken;
+            if (blockTimeTaken < blockMinTime || rep == 0) blockMinTime = blockTimeTaken;
+        }
 
         if (!matrixEqual(matC, matD, matSize)) puts("Matrices were not equal!");
 
@@ -114,12 +146,21 @@ int main(const int argc, const char** argv)
         dummy(matD);
     }
 
-    printf("\nResults: (all times are in seconds)\n\n");
+    printf("\nTimings: (in seconds)\n\n");
 
     printf("            Max         Min         Mean   \n");
     printf("         ----------  ----------  ----------\n");
     printf("Regular: %10.4e  %10.4e  %10.4e\n", maxTime, minTime, totTime / numReps);
     printf("Blocked: %10.4e  %10.4e  %10.4e\n", blockMaxTime, blockMinTime, blockTotTime / numReps);
+
+    const double numOps = 2 * matSize * matSize * matSize;
+
+    printf("\nPerformance: (in FLOPS)\n\n");
+
+    printf("            Max         Min         Mean   \n");
+    printf("         ----------  ----------  ----------\n");
+    printf("Regular: %10.4e  %10.4e  %10.4e\n", numOps / maxTime, numOps / minTime, numOps / (totTime / numReps));
+    printf("Blocked: %10.4e  %10.4e  %10.4e\n", numOps / blockMaxTime, numOps / blockMinTime, numOps / (blockTotTime / numReps));
 
     free(matA);
     free(matB);
