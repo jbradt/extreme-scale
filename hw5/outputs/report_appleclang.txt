@@ -1,0 +1,72 @@
+clang -std=c99 -O3 -flax-vector-conversions -funsafe-math-optimizations -march=native -Wall -Werror -Rpass=loop-vectorize -Rpass-missed=loop-vectorize -c morth1.c
+morth1.c:85:2: remark: loop not vectorized: use -Rpass-analysis=loop-vectorize for more info [-Rpass-missed=loop-vectorize]
+        morthfr(n,w,v0,v1,v2,v3);
+        ^
+morth1.c:77:2: remark: loop not vectorized: use -Rpass-analysis=loop-vectorize for more info [-Rpass-missed=loop-vectorize]
+        morthf(n,w+1,v0+1,v1+1,v2+1,v3+1);
+        ^
+morth1.c:69:2: remark: loop not vectorized: use -Rpass-analysis=loop-vectorize for more info [-Rpass-missed=loop-vectorize]
+        morthf(n,w,v0,v1,v2,v3);
+        ^
+morth1.c:127:9: remark: vectorized loop (vectorization factor: 8, unrolling interleave factor: 1) [-Rpass=loop-vectorize]
+        w[i] = w[i] - s0 * v0[i] - s1 * v1[i] - s2 * v2[i] - s3 * v3[i];
+               ^
+morth1.c:121:8: remark: loop not vectorized: use -Rpass-analysis=loop-vectorize for more info [-Rpass-missed=loop-vectorize]
+        s0 += w[i] * v0[i];
+              ^
+morth1.c:139:9: remark: vectorized loop (vectorization factor: 8, unrolling interleave factor: 4) [-Rpass=loop-vectorize]
+        w[i] = w[i] - s0 * v[i];
+               ^
+morth1.c:136:8: remark: loop not vectorized: use -Rpass-analysis=loop-vectorize for more info [-Rpass-missed=loop-vectorize]
+        s0 += w[i] * v[i];
+              ^
+morth1.c:139:9: remark: vectorized loop (vectorization factor: 8, unrolling interleave factor: 4) [-Rpass=loop-vectorize]
+        w[i] = w[i] - s0 * v[i];
+               ^
+morth1.c:136:8: remark: loop not vectorized: use -Rpass-analysis=loop-vectorize for more info [-Rpass-missed=loop-vectorize]
+        s0 += w[i] * v[i];
+              ^
+morth1.c:139:9: remark: vectorized loop (vectorization factor: 8, unrolling interleave factor: 4) [-Rpass=loop-vectorize]
+        w[i] = w[i] - s0 * v[i];
+               ^
+morth1.c:136:8: remark: loop not vectorized: use -Rpass-analysis=loop-vectorize for more info [-Rpass-missed=loop-vectorize]
+        s0 += w[i] * v[i];
+              ^
+morth1.c:139:9: remark: vectorized loop (vectorization factor: 8, unrolling interleave factor: 4) [-Rpass=loop-vectorize]
+        w[i] = w[i] - s0 * v[i];
+               ^
+morth1.c:135:5: remark: loop not vectorized: use -Rpass-analysis=loop-vectorize for more info [-Rpass-missed=loop-vectorize]
+    for (i=0; i<n; i++) {
+    ^
+morth1.c:108:14: remark: vectorized loop (vectorization factor: 4, unrolling interleave factor: 1) [-Rpass=loop-vectorize]
+        w[i]  = sin((double)i * f);
+                    ^
+morth1.c:107:5: remark: vectorized loop (vectorization factor: 4, unrolling interleave factor: 1) [-Rpass=loop-vectorize]
+    for (i=0; i<n; i++) {
+    ^
+morth1.c:135:5: remark: loop not vectorized: use -Rpass-analysis=loop-vectorize for more info [-Rpass-missed=loop-vectorize]
+    for (i=0; i<n; i++) {
+    ^
+morth1.c:138:5: remark: vectorized loop (vectorization factor: 8, unrolling interleave factor: 4) [-Rpass=loop-vectorize]
+    for (i=0; i<n; i++) {
+    ^
+morth1.c:120:5: remark: loop not vectorized: use -Rpass-analysis=loop-vectorize for more info [-Rpass-missed=loop-vectorize]
+    for (i=0; i<n; i++) {
+    ^
+morth1.c:126:5: remark: vectorized loop (vectorization factor: 8, unrolling interleave factor: 1) [-Rpass=loop-vectorize]
+    for (i=0; i<n; i++) {
+    ^
+clang -std=c99 -O3 -flax-vector-conversions -funsafe-math-optimizations -march=native -Wall -Werror -Rpass=loop-vectorize -Rpass-missed=loop-vectorize -c morthr.c
+morthr.c:8:5: remark: loop not vectorized: use -Rpass-analysis=loop-vectorize for more info [-Rpass-missed=loop-vectorize]
+    for (i=0; i<n; i++) {
+    ^
+morthr.c:14:5: remark: vectorized loop (vectorization factor: 8, unrolling interleave factor: 1) [-Rpass=loop-vectorize]
+    for (i=0; i<n; i++) {
+    ^
+morthr.c:27:5: remark: loop not vectorized: use -Rpass-analysis=loop-vectorize for more info [-Rpass-missed=loop-vectorize]
+    for (i=0; i<n; i++) {
+    ^
+morthr.c:33:5: remark: vectorized loop (vectorization factor: 8, unrolling interleave factor: 1) [-Rpass=loop-vectorize]
+    for (i=0; i<n; i++) {
+    ^
+clang morth1.o morthr.o -o morth1 

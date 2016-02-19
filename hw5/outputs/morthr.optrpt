@@ -1,0 +1,83 @@
+Intel(R) Advisor can now assist with vectorization and show optimization
+  report messages with your source code.
+See "https://software.intel.com/en-us/intel-advisor-xe" for details.
+
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINING OPTION VALUES:
+  -inline-factor: 100
+  -inline-min-size: 30
+  -inline-max-size: 230
+  -inline-max-total-size: 2000
+  -inline-max-per-routine: 10000
+  -inline-max-per-compile: 500000
+
+
+Begin optimization report for: morthf(int, float *, float *, float *, float *, float *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (morthf(int, float *, float *, float *, float *, float *)) [1] morthr.c(5,1)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at morthr.c(8,5)
+<Peeled loop for vectorization>
+LOOP END
+
+LOOP BEGIN at morthr.c(8,5)
+   remark #15300: LOOP WAS VECTORIZED
+LOOP END
+
+LOOP BEGIN at morthr.c(8,5)
+<Remainder loop for vectorization>
+LOOP END
+
+LOOP BEGIN at morthr.c(14,5)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization. First dependence is shown below. Use level 5 report for details
+   remark #15346: vector dependence: assumed FLOW dependence between  line 15 and  line 15
+LOOP END
+===========================================================================
+
+Begin optimization report for: morthfr(int, float *__restrict__, const float *__restrict__, const float *__restrict__, const float *__restrict__, const float *__restrict__)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (morthfr(int, float *__restrict__, const float *__restrict__, const float *__restrict__, const float *__restrict__, const float *__restrict__)) [2] morthr.c(24,1)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at morthr.c(27,5)
+<Peeled loop for vectorization>
+LOOP END
+
+LOOP BEGIN at morthr.c(27,5)
+   remark #15300: LOOP WAS VECTORIZED
+LOOP END
+
+LOOP BEGIN at morthr.c(27,5)
+<Remainder loop for vectorization>
+LOOP END
+
+LOOP BEGIN at morthr.c(33,5)
+<Peeled loop for vectorization>
+LOOP END
+
+LOOP BEGIN at morthr.c(33,5)
+   remark #15300: LOOP WAS VECTORIZED
+LOOP END
+
+LOOP BEGIN at morthr.c(33,5)
+<Remainder loop for vectorization>
+   remark #15301: REMAINDER LOOP WAS VECTORIZED
+LOOP END
+
+LOOP BEGIN at morthr.c(33,5)
+<Remainder loop for vectorization>
+LOOP END
+===========================================================================
