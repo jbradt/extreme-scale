@@ -1,0 +1,54 @@
+Num threads: 1
+Array size = 50000000
+Num iters  = 20
+Mean time  = 1.40e-01 s
+Total time = 2.79e+00 s
+Rate       = 5.73e+03 MB/s
+Num threads: 2
+Array size = 50000000
+Num iters  = 20
+Mean time  = 7.63e-02 s
+Total time = 1.53e+00 s
+Rate       = 1.05e+04 MB/s
+Num threads: 4
+Array size = 50000000
+Num iters  = 20
+Mean time  = 6.56e-02 s
+Total time = 1.31e+00 s
+Rate       = 1.22e+04 MB/s
+Num threads: 6
+Array size = 50000000
+Num iters  = 20
+Mean time  = 6.59e-02 s
+Total time = 1.32e+00 s
+Rate       = 1.21e+04 MB/s
+Num threads: 8
+Array size = 50000000
+Num iters  = 20
+Mean time  = 6.60e-02 s
+Total time = 1.32e+00 s
+Rate       = 1.21e+04 MB/s
+Num threads: 10
+Array size = 50000000
+Num iters  = 20
+Mean time  = 6.53e-02 s
+Total time = 1.31e+00 s
+Rate       = 1.22e+04 MB/s
+Num threads: 12
+Array size = 50000000
+Num iters  = 20
+Mean time  = 6.54e-02 s
+Total time = 1.31e+00 s
+Rate       = 1.22e+04 MB/s
+Num threads: 14
+Array size = 50000000
+Num iters  = 20
+Mean time  = 6.57e-02 s
+Total time = 1.31e+00 s
+Rate       = 1.22e+04 MB/s
+Num threads: 16
+Array size = 50000000
+Num iters  = 20
+Mean time  = 6.57e-02 s
+Total time = 1.31e+00 s
+Rate       = 1.22e+04 MB/s

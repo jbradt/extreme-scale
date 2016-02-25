@@ -21,7 +21,7 @@ int main(const int argc, const char** argv)
 
     double start = mysecond();
     for (size_t iter = 0; iter < numIters; iter++) {
-        #pragma omp parallel for
+        #pragma omp parallel for default(none) shared(c, a, N) schedule(static)
         for (size_t i = 0; i < N; i++) {
             c[i] = a[i];
         }
