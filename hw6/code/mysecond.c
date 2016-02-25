@@ -1,4 +1,5 @@
 #include <sys/time.h>
+#include <stdlib.h>
 
 double mysecond(void);
 double mysecond_(void);
