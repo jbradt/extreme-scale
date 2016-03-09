@@ -1,0 +1,99 @@
+N=20 TH=0
+Regular mult. took 2.4080e-05 s. Will iterate 41528 times.
+Seconds: 2.2887e-05  2.3112e-05  2.3482e-05
+FLOPS: 6.9909e+08  6.9227e+08  6.8136e+08
+N=20 TH=1
+Regular mult. took 4.1008e-05 s. Will iterate 24385 times.
+Seconds: 2.0078e-05  2.0490e-05  2.0876e-05
+FLOPS: 7.9689e+08  7.8087e+08  7.6644e+08
+N=20 TH=2
+Regular mult. took 1.6189e-04 s. Will iterate 6177 times.
+Seconds: 9.9343e-06  1.0090e-05  1.0423e-05
+FLOPS: 1.6106e+09  1.5858e+09  1.5350e+09
+N=20 TH=3
+Regular mult. took 1.5402e-04 s. Will iterate 6493 times.
+Seconds: 7.2426e-06  7.3427e-06  7.5025e-06
+FLOPS: 2.2092e+09  2.1790e+09  2.1326e+09
+N=20 TH=4
+Regular mult. took 1.9002e-04 s. Will iterate 5263 times.
+Seconds: 5.3857e-06  5.9534e-06  6.3289e-06
+FLOPS: 2.9708e+09  2.6876e+09  2.5281e+09
+N=20 TH=5
+Regular mult. took 2.0599e-04 s. Will iterate 4855 times.
+Seconds: 6.1158e-06  6.3839e-06  6.7123e-06
+FLOPS: 2.6162e+09  2.5063e+09  2.3837e+09
+N=20 TH=6
+Regular mult. took 2.6488e-04 s. Will iterate 3775 times.
+Seconds: 5.9113e-06  6.8143e-06  7.6779e-06
+FLOPS: 2.7067e+09  2.3480e+09  2.0839e+09
+N=20 TH=7
+Regular mult. took 2.0599e-04 s. Will iterate 4855 times.
+Seconds: 4.9120e-06  5.4486e-06  6.1965e-06
+FLOPS: 3.2573e+09  2.9365e+09  2.5821e+09
+N=20 TH=8
+Regular mult. took 2.3890e-04 s. Will iterate 4186 times.
+Seconds: 5.0315e-06  6.2726e-06  7.9797e-06
+FLOPS: 3.1800e+09  2.5508e+09  2.0051e+09
+N=100 TH=0
+Regular mult. took 2.7461e-03 s. Will iterate 364 times.
+Seconds: 2.9079e-03  2.9761e-03  3.0428e-03
+FLOPS: 6.8777e+08  6.7202e+08  6.5729e+08
+N=100 TH=1
+Regular mult. took 3.7420e-03 s. Will iterate 267 times.
+Seconds: 2.8579e-03  2.9570e-03  3.0647e-03
+FLOPS: 6.9983e+08  6.7636e+08  6.5259e+08
+N=100 TH=2
+Regular mult. took 2.0220e-03 s. Will iterate 495 times.
+Seconds: 1.3852e-03  1.3997e-03  1.4093e-03
+FLOPS: 1.4438e+09  1.4288e+09  1.4191e+09
+N=100 TH=3
+Regular mult. took 1.0431e-03 s. Will iterate 959 times.
+Seconds: 9.3843e-04  9.4862e-04  9.5831e-04
+FLOPS: 2.1312e+09  2.1083e+09  2.0870e+09
+N=100 TH=4
+Regular mult. took 8.6904e-04 s. Will iterate 1151 times.
+Seconds: 6.9850e-04  7.0490e-04  7.1662e-04
+FLOPS: 2.8633e+09  2.8373e+09  2.7909e+09
+N=100 TH=5
+Regular mult. took 8.0991e-04 s. Will iterate 1235 times.
+Seconds: 6.2339e-04  6.2845e-04  6.3327e-04
+FLOPS: 3.2083e+09  3.1824e+09  3.1582e+09
+N=100 TH=6
+Regular mult. took 7.2312e-04 s. Will iterate 1383 times.
+Seconds: 5.2857e-04  5.3184e-04  5.3626e-04
+FLOPS: 3.7838e+09  3.7605e+09  3.7296e+09
+N=100 TH=7
+Regular mult. took 1.7872e-03 s. Will iterate 560 times.
+Seconds: 4.6536e-04  4.7614e-04  5.0403e-04
+FLOPS: 4.2978e+09  4.2004e+09  3.9680e+09
+N=100 TH=8
+Regular mult. took 1.5218e-03 s. Will iterate 657 times.
+Seconds: 4.2520e-04  4.8118e-04  5.3869e-04
+FLOPS: 4.7036e+09  4.1565e+09  3.7127e+09
+N=1000 TH=0
+Seconds: 8.6869e+00  8.7625e+00  8.8552e+00
+FLOPS: 2.3023e+08  2.2824e+08  2.2586e+08
+N=1000 TH=1
+Seconds: 8.5883e+00  8.6460e+00  8.6919e+00
+FLOPS: 2.3287e+08  2.3132e+08  2.3010e+08
+N=1000 TH=2
+Seconds: 4.0910e+00  4.1183e+00  4.1615e+00
+FLOPS: 4.8888e+08  4.8563e+08  4.8059e+08
+N=1000 TH=3
+Seconds: 2.7457e+00  2.7565e+00  2.7778e+00
+FLOPS: 7.2840e+08  7.2557e+08  7.1998e+08
+N=1000 TH=4
+Seconds: 2.1133e+00  2.2086e+00  2.3450e+00
+FLOPS: 9.4639e+08  9.0555e+08  8.5289e+08
+N=1000 TH=5
+Seconds: 2.0902e+00  2.1183e+00  2.2006e+00
+FLOPS: 9.5686e+08  9.4415e+08  9.0885e+08
+N=1000 TH=6
+Seconds: 2.0627e+00  2.0821e+00  2.1030e+00
+FLOPS: 9.6961e+08  9.6055e+08  9.5101e+08
+N=1000 TH=7
+Seconds: 2.0657e+00  2.0710e+00  2.0793e+00
+FLOPS: 9.6818e+08  9.6571e+08  9.6185e+08
+N=1000 TH=8
+Seconds: 2.0557e+00  2.0662e+00  2.0894e+00
+FLOPS: 9.7290e+08  9.6794e+08  9.5719e+08
