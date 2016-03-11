@@ -9,6 +9,8 @@
 #PBS -m abe
 #PBS -M jbradt@msu.edu
 
+cd ${HOME}/Documents/Code/extreme-scale/hw7/code
+
 MMULOMP=./mmul-omp
 MMULNOOMP=./mmul-noomp
 
