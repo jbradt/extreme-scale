@@ -3,7 +3,7 @@
 #PBS -q normal
 #PBS -A babq
 #PBS -j oe
-#PBS -l walltime=00:02:00
+#PBS -l walltime=00:05:00
 #PBS -l nodes=32:ppn=32:xe
 #PBS -m abe
 #PBS -M jbradt@msu.edu
