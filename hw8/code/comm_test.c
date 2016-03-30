@@ -71,7 +71,7 @@ void print_header(void)
     rank_printf(0, "test\ti\tj\tm\ttime\n");
 }
 
-void run_tests(int i, int j, int rank, int *mvals, int mcount, int niters)
+void run_tests(int i, int j, int rank, int *mvals, int mcount, int niters, int nPerIter)
 {
     double start, end;
 
@@ -85,9 +85,11 @@ void run_tests(int i, int j, int rank, int *mvals, int mcount, int niters)
             double minTime = 1e9;
             for (int iter = 0; iter < niters; iter++) {
                 start = MPI_Wtime();
-                pingpong_blocking(i, j, m, rank, buffer1);
+                for (int run = 0; run < nPerIter; run++) {
+                    pingpong_blocking(i, j, m, rank, buffer1);
+                }
                 end = MPI_Wtime();
-                double timeTaken = end - start;
+                double timeTaken = (end - start) / nPerIter;
                 if (timeTaken < minTime) minTime = timeTaken;
             }
             rank_printf(i, "ppnb\t%d\t%d\t%d\t%0.4le\n", i, j, m, minTime);
@@ -99,9 +101,11 @@ void run_tests(int i, int j, int rank, int *mvals, int mcount, int niters)
             double minTime = 1e9;
             for (int iter = 0; iter < niters; iter++) {
                 start = MPI_Wtime();
-                pingpong_nonblocking(i, j, m, rank, buffer1);
+                for (int run = 0; run < nPerIter; run++) {
+                    pingpong_nonblocking(i, j, m, rank, buffer1);
+                }
                 end = MPI_Wtime();
-                double timeTaken = end - start;
+                double timeTaken = (end - start) / nPerIter;
                 if (timeTaken < minTime) minTime = timeTaken;
             }
             rank_printf(i, "ppb\t%d\t%d\t%d\t%0.4le\n", i, j, m, minTime);
@@ -113,9 +117,11 @@ void run_tests(int i, int j, int rank, int *mvals, int mcount, int niters)
             double minTime = 1e9;
             for (int iter = 0; iter < niters; iter++) {
                 start = MPI_Wtime();
-                head_to_head(i, j, m, rank, buffer1, buffer2);
+                for (int run = 0; run < nPerIter; run++) {
+                    head_to_head(i, j, m, rank, buffer1, buffer2);
+                }
                 end = MPI_Wtime();
-                double timeTaken = end - start;
+                double timeTaken = (end - start) / nPerIter;
                 if (timeTaken < minTime) minTime = timeTaken;
             }
             rank_printf(i, "h2h\t%d\t%d\t%d\t%0.4le\n", i, j, m, minTime);
@@ -152,12 +158,13 @@ int main(int argc, char** argv)
     rank_printf(0, "\n");
 
     const int numIters = 5;
+    const int numPerIter = 1000;
 
     print_header();
 
-    run_tests(0, 1, rank, mvals, 18, numIters);
-    run_tests(0, size-1, rank, mvals, 18, numIters);
-    run_tests(2, 3, rank, mvals, 18, numIters);
+    run_tests(0, 1, rank, mvals, 18, numIters, numPerIter);
+    run_tests(0, size-1, rank, mvals, 18, numIters, numPerIter);
+    run_tests(2, 3, rank, mvals, 18, numIters, numPerIter);
 
     MPI_Finalize();
     return 0;
