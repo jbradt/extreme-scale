@@ -16,65 +16,116 @@ void rank_printf(int rank, const char* fmt, ...)
     }
 }
 
-void pingpong_blocking(int i, int j, int m, int rank)
+void pingpong_blocking(int i, int j, int m, int rank, char* buffer)
 {
     // printf("In func, my rank is %d, i=%d, j=%d\n", rank, i, j);
     if (rank == i) {
-        char* data = malloc(m * sizeof(char));
-        MPI_Send(data, m, MPI_CHAR, j, 0, MPI_COMM_WORLD);
-        MPI_Recv(data, m, MPI_CHAR, j, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Send(buffer, m, MPI_CHAR, j, 0, MPI_COMM_WORLD);
+        MPI_Recv(buffer, m, MPI_CHAR, j, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         // printf("Sent from process %d\n", i);
-        free(data);
     }
     if (rank == j) {
-        char* data = malloc(m * sizeof(char));
-        MPI_Recv(data, m, MPI_CHAR, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        MPI_Send(data, m, MPI_CHAR, i, 0, MPI_COMM_WORLD);
+        MPI_Recv(buffer, m, MPI_CHAR, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Send(buffer, m, MPI_CHAR, i, 0, MPI_COMM_WORLD);
         // printf("Received in process %d\n", j);
-        free(data);
     }
 }
 
-void pingpong_nonblocking(int i, int j, int m, int rank)
+void pingpong_nonblocking(int i, int j, int m, int rank, char* buffer)
 {
     // printf("In func, my rank is %d, i=%d, j=%d\n", rank, i, j);
     if (rank == i) {
-        char* data = malloc(m * sizeof(char));
         MPI_Request req;
-        MPI_Isend(data, m, MPI_CHAR, j, 0, MPI_COMM_WORLD, &req);
+        MPI_Isend(buffer, m, MPI_CHAR, j, 0, MPI_COMM_WORLD, &req);
         MPI_Wait(&req, MPI_STATUS_IGNORE);
 
-        MPI_Irecv(data, m, MPI_CHAR, j, 0, MPI_COMM_WORLD, &req);
+        MPI_Irecv(buffer, m, MPI_CHAR, j, 0, MPI_COMM_WORLD, &req);
         MPI_Wait(&req, MPI_STATUS_IGNORE);
         // printf("Sent from process %d\n", i);
-        free(data);
     }
     if (rank == j) {
-        char* data = malloc(m * sizeof(char));
         MPI_Request req;
-        MPI_Irecv(data, m, MPI_CHAR, i, 0, MPI_COMM_WORLD, &req);
+        MPI_Irecv(buffer, m, MPI_CHAR, i, 0, MPI_COMM_WORLD, &req);
         MPI_Wait(&req, MPI_STATUS_IGNORE);
 
-        MPI_Isend(data, m, MPI_CHAR, i, 0, MPI_COMM_WORLD, &req);
+        MPI_Isend(buffer, m, MPI_CHAR, i, 0, MPI_COMM_WORLD, &req);
         MPI_Wait(&req, MPI_STATUS_IGNORE);
         // printf("Received in process %d\n", j);
-        free(data);
     }
 }
 
-void head_to_head(int i, int j, int m, int rank)
+void head_to_head(int i, int j, int m, int rank, char* msg_out, char* msg_in)
 {
     if ((rank != i) && (rank != j)) return;
 
     int other = (rank == i ? j : i);
 
-    char* msg_out = malloc(m * sizeof(char));
-    char* msg_in = malloc(m * sizeof(char));
-
     MPI_Request req[2];
     MPI_Isend(msg_out, m, MPI_CHAR, other, 0, MPI_COMM_WORLD, &req[0]);
     MPI_Irecv(msg_in, m, MPI_CHAR, other, 0, MPI_COMM_WORLD, &req[1]);
     MPI_Waitall(2, req, MPI_STATUS_IGNORE);
+}
+
+void print_header(void)
+{
+    rank_printf(0, "test\ti\tj\tm\ttime\n");
+}
+
+void run_tests(int i, int j, int rank, int *mvals, int mcount, int niters)
+{
+    double start, end;
+
+    for (int mIter = 0; mIter < mcount; mIter++) {
+        int m = mvals[mIter];
+
+        char* buffer1 = malloc(m * sizeof(char));
+        char* buffer2 = malloc(m * sizeof(char));
+
+        if (rank == i || rank == j) {
+            double minTime = 1e9;
+            for (int iter = 0; iter < niters; iter++) {
+                start = MPI_Wtime();
+                pingpong_blocking(i, j, m, rank, buffer1);
+                end = MPI_Wtime();
+                double timeTaken = end - start;
+                if (timeTaken < minTime) minTime = timeTaken;
+            }
+            rank_printf(i, "ppnb\t%d\t%d\t%d\t%0.4le\n", i, j, m, minTime);
+        }
+
+        MPI_Barrier(MPI_COMM_WORLD);  // ----------------------------------------------------------------------
+
+        if (rank == i || rank == j) {
+            double minTime = 1e9;
+            for (int iter = 0; iter < niters; iter++) {
+                start = MPI_Wtime();
+                pingpong_nonblocking(i, j, m, rank, buffer1);
+                end = MPI_Wtime();
+                double timeTaken = end - start;
+                if (timeTaken < minTime) minTime = timeTaken;
+            }
+            rank_printf(i, "ppb\t%d\t%d\t%d\t%0.4le\n", i, j, m, minTime);
+        }
+
+        MPI_Barrier(MPI_COMM_WORLD);  // ----------------------------------------------------------------------
+
+        if (rank == i || rank == j) {
+            double minTime = 1e9;
+            for (int iter = 0; iter < niters; iter++) {
+                start = MPI_Wtime();
+                head_to_head(i, j, m, rank, buffer1, buffer2);
+                end = MPI_Wtime();
+                double timeTaken = end - start;
+                if (timeTaken < minTime) minTime = timeTaken;
+            }
+            rank_printf(i, "h2h\t%d\t%d\t%d\t%0.4le\n", i, j, m, minTime);
+        }
+
+        MPI_Barrier(MPI_COMM_WORLD);  // ----------------------------------------------------------------------
+
+        free(buffer1);
+        free(buffer2);
+    }
 }
 
 int main(int argc, char** argv)
@@ -92,32 +143,21 @@ int main(int argc, char** argv)
         printf("MPI wall clock resolution: %0.4le seconds\n", tickSize);
     }
 
-    double start, end;
-
-    if (rank == 0 || rank == 1) {
-        start = MPI_Wtime();
-        pingpong_blocking(0, 1, 204813, rank);
-        end = MPI_Wtime();
-        rank_printf(0, "Took %0.4le seconds\n", end-start);
+    int mvals[18];
+    mvals[0] = 0;
+    for (int k = 2; k <= 18; k++) {
+        mvals[k-1] = (1 << k);
     }
 
-    MPI_Barrier(MPI_COMM_WORLD);  // ----------------------------------------------------------------------
+    rank_printf(0, "\n");
 
-    if (rank == 0 || rank == 1) {
-        start = MPI_Wtime();
-        pingpong_nonblocking(0, 1, 204813, rank);
-        end = MPI_Wtime();
-        rank_printf(0, "Took %0.4le seconds\n", end-start);
-    }
+    const int numIters = 5;
 
-    MPI_Barrier(MPI_COMM_WORLD);  // ----------------------------------------------------------------------
+    print_header();
 
-    if (rank == 0 || rank == 1) {
-        start = MPI_Wtime();
-        head_to_head(0, 1, 204813, rank);
-        end = MPI_Wtime();
-        rank_printf(0, "Took %0.4le seconds\n", end-start);
-    }
+    run_tests(0, 1, rank, mvals, 18, numIters);
+    run_tests(0, size-1, rank, mvals, 18, numIters);
+    run_tests(2, 3, rank, mvals, 18, numIters);
 
     MPI_Finalize();
     return 0;
