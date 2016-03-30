@@ -12,4 +12,4 @@ source ${HOME}/setenv_gcc.sh
 
 cd ${PBS_O_WORKDIR}
 
-mpiexec comm_test
+mpiexec -pernode comm_test
