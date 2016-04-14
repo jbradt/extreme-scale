@@ -130,7 +130,7 @@ bool vecEqual(double *restrict vec1, double *restrict vec2, const int nRows) {
 int main(int argc, char** argv)
 {
     int provided = 0;
-    MPI_Init_thread(&argc, &argv, MPI_THREAD_SINGLE, &provided);
+    MPI_Init_thread(&argc, &argv, MPI_THREAD_MULTIPLE, &provided);
 
     int matsize = 128;
     if (argc > 1) {
