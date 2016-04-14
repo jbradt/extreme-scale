@@ -139,7 +139,7 @@ int main(int argc, char** argv)
 
     const int numIters = 5;
 
-    rank_printf(0, "Full matrix size = %d\n", matsize);
+    // rank_printf(0, "Full matrix size = %d\n", matsize);
 
     int commSize;
     MPI_Comm_size(MPI_COMM_WORLD, &commSize);
@@ -149,7 +149,7 @@ int main(int argc, char** argv)
 
     int chunkSize = matsize / commSize;
 
-    rank_printf(0, "Each process takes %d rows\n", chunkSize);
+    // rank_printf(0, "Each process takes %d rows\n", chunkSize);
 
     double* mat = malloc(chunkSize * matsize * sizeof(double));
     double* vec = malloc(chunkSize * sizeof(double));
@@ -176,7 +176,7 @@ int main(int argc, char** argv)
         if (thisIterTime < minAgTime) minAgTime = thisIterTime;
     }
 
-    rank_printf(0, "AG Time: %0.4e\n", minAgTime);
+    // rank_printf(0, "AG Time: %0.4e\n", minAgTime);
 
     double minRingTime = 1e9;
     for (int iter = 0; iter < numIters; iter++) {
@@ -199,7 +199,9 @@ int main(int argc, char** argv)
         if (thisIterTime < minRingTime) minRingTime = thisIterTime;
     }
 
-    rank_printf(0, "Ring Time: %0.4e\n", minRingTime);
+    // rank_printf(0, "Ring Time: %0.4e\n", minRingTime);
+
+    rank_printf(0, "% 6d\t% 6d\t%0.4e\t%0.4e\n", matsize, chunkSize, minAgTime, minRingTime);
 
     free(mat);
     free(vec);
