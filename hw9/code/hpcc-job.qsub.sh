@@ -12,7 +12,15 @@ source ${HOME}/setenv_gcc.sh
 
 cd ${PBS_O_WORKDIR}
 
-mpiexec -pernode comm_test
+OUTFILE=output.tsv
 
-echo "Job statistics"
-qstat -f $PBS_JOBID
+PROCNUMS=(128 256 512 1024)
+MATSIZES=(1024 16384 102400)
+
+printf "matsize\tchunksize\tagtime\tringtime\n" > ${OUTFILE}
+
+for NPROC in "${PROCNUMS[@]}"; do
+    for M in "${MATSIZES[@]}"; do
+        mpiexec -n $NPROC ./matvec-mpi $M >> ${OUTFILE}
+    done
+done
