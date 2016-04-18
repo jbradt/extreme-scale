@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdbool.h>
+#include <string.h>
 
 void rank_printf(int rank, const char* fmt, ...)
 {
@@ -14,6 +15,69 @@ void rank_printf(int rank, const char* fmt, ...)
         vprintf(fmt, args);
         va_end(args);
     }
+}
+
+char* strAddSuffix(const char* raw, const char* suffix)
+{
+    size_t newStrSize = strlen(raw) + strlen(suffix) + 1;
+    char* newStr = malloc(newStrSize * sizeof(char));
+    strcpy(newStr, raw);
+    strcat(newStr, suffix);
+    return newStr;
+}
+
+void writeCollective(MPI_Comm comm, const char* filename, MPI_Datatype dtype, const double *restrict data, size_t dataSize,
+                     double *restrict times)
+{
+    int status;
+    MPI_File fh;
+
+    status = MPI_File_open(comm, filename, MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &fh);
+    if (status != MPI_SUCCESS) {
+        rank_printf(0, "File open failed. Aborting.\n");
+        MPI_Abort(MPI_COMM_WORLD, 3);
+    }
+
+    MPI_Offset zeroOffset = 0;
+    MPI_File_set_view(fh, zeroOffset, MPI_DOUBLE, dtype, "native", MPI_INFO_NULL);
+
+    double writeStart = MPI_Wtime();
+    MPI_File_write_all(fh, data, dataSize, MPI_DOUBLE, MPI_STATUS_IGNORE);
+    double writeEnd = MPI_Wtime();
+    MPI_File_close(&fh);
+    double fileClosed = MPI_Wtime();
+
+    double localTimes[2] = {writeEnd - writeStart, fileClosed - writeEnd};
+
+    MPI_Allreduce(&localTimes, times, 2, MPI_DOUBLE, MPI_MAX, comm);
+}
+
+void writeIndependent(MPI_Comm comm, const char* filename, const double *restrict data,
+                      const int* fullDims, const int* subDims, const int* startLoc,
+                      double *restrict times)
+{
+    int status;
+    MPI_File fh;
+
+    status = MPI_File_open(comm, filename, MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &fh);
+    if (status != MPI_SUCCESS) {
+        rank_printf(0, "File open failed. Aborting.\n");
+        MPI_Abort(MPI_COMM_WORLD, 3);
+    }
+
+    double writeStart = MPI_Wtime();
+    for (int j = 0; j < subDims[1]; j++) {
+        MPI_Offset offset = (startLoc[0] + (startLoc[1] + j) * fullDims[0]) * (MPI_Offset)sizeof(double);
+        const double* colPtr = data + j * subDims[0];
+        MPI_File_write_at(fh, offset, colPtr, subDims[0], MPI_DOUBLE, MPI_STATUS_IGNORE);
+    }
+    double writeEnd = MPI_Wtime();
+    MPI_File_close(&fh);
+    double fileClosed = MPI_Wtime();
+
+    double localTimes[2] = {writeEnd - writeStart, fileClosed - writeEnd};
+
+    MPI_Allreduce(&localTimes, times, 2, MPI_DOUBLE, MPI_MAX, comm);
 }
 
 int main(int argc, char** argv)
@@ -77,21 +141,26 @@ int main(int argc, char** argv)
         }
     }
 
-    int status;
-    MPI_File fh;
+    char* suffixedFilename = strAddSuffix(filename, "-3");
 
-    status = MPI_File_open(MPI_COMM_WORLD, filename, MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &fh);
-    if (status != MPI_SUCCESS) {
-        rank_printf(0, "File open failed. Aborting.\n");
-        MPI_Abort(MPI_COMM_WORLD, 3);
-    }
+    MPI_Barrier(cartComm);
 
-    MPI_Offset zeroOffset = 0;
-    MPI_File_set_view(fh, zeroOffset, MPI_DOUBLE, subarr_dtype, "native", MPI_INFO_NULL);
+    double collectiveTimes[2];
+    writeCollective(cartComm, suffixedFilename, subarr_dtype, mat, subDims[0] * subDims[1], &collectiveTimes[0]);
+    rank_printf(0, "Times: %e %e\n", collectiveTimes[0], collectiveTimes[1]);
 
-    MPI_File_write_all(fh, mat, subDims[0] * subDims[1], MPI_DOUBLE, MPI_STATUS_IGNORE);
+    free(suffixedFilename);
+    suffixedFilename = NULL;
 
-    MPI_File_close(&fh);
+    suffixedFilename = strAddSuffix(filename, "-0");
+
+    MPI_Barrier(cartComm);
+
+    double independentTimes[2];
+    writeIndependent(cartComm, suffixedFilename, mat, fullDims, subDims, startIdx, &independentTimes[0]);
+    rank_printf(0, "Times: %e %e\n", independentTimes[0], independentTimes[1]);
+
+    free(suffixedFilename);
 
     free(mat);
 
