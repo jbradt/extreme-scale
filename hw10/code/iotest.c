@@ -26,13 +26,13 @@ char* strAddSuffix(const char* raw, const char* suffix)
     return newStr;
 }
 
-void writeCollective(MPI_Comm comm, const char* filename, MPI_Datatype dtype, const double *restrict data, size_t dataSize,
+void writeCollective(MPI_Comm comm, const char* filename, MPI_Info fileInfo, MPI_Datatype dtype, const double *restrict data, size_t dataSize,
                      double *restrict times)
 {
     int status;
     MPI_File fh;
 
-    status = MPI_File_open(comm, filename, MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &fh);
+    status = MPI_File_open(comm, filename, MPI_MODE_CREATE | MPI_MODE_WRONLY, fileInfo, &fh);
     if (status != MPI_SUCCESS) {
         rank_printf(0, "File open failed. Aborting.\n");
         MPI_Abort(MPI_COMM_WORLD, 3);
@@ -52,14 +52,14 @@ void writeCollective(MPI_Comm comm, const char* filename, MPI_Datatype dtype, co
     MPI_Allreduce(&localTimes, times, 2, MPI_DOUBLE, MPI_MAX, comm);
 }
 
-void writeIndependent(MPI_Comm comm, const char* filename, const double *restrict data,
+void writeIndependent(MPI_Comm comm, const char* filename, MPI_Info fileInfo, const double *restrict data,
                       const int* fullDims, const int* subDims, const int* startLoc,
                       double *restrict times)
 {
     int status;
     MPI_File fh;
 
-    status = MPI_File_open(comm, filename, MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &fh);
+    status = MPI_File_open(comm, filename, MPI_MODE_CREATE | MPI_MODE_WRONLY, fileInfo, &fh);
     if (status != MPI_SUCCESS) {
         rank_printf(0, "File open failed. Aborting.\n");
         MPI_Abort(MPI_COMM_WORLD, 3);
@@ -131,6 +131,15 @@ int main(int argc, char** argv)
     MPI_Type_create_subarray(2, fullDims, subDims, startIdx, MPI_ORDER_FORTRAN, MPI_DOUBLE, &subarr_dtype);
     MPI_Type_commit(&subarr_dtype);
 
+    MPI_Info fileInfo = MPI_INFO_NULL;
+    if (stripingFactor != 0) {
+        char stripeStr[50];
+        snprintf(stripeStr, 50, "%ld", stripingFactor);
+        MPI_Info_create(&fileInfo);
+        MPI_Info_set(fileInfo, "striping_factor", stripeStr);
+        MPI_Info_set(fileInfo, "cb_nodes", stripeStr);
+    }
+
     double* mat = malloc(subDims[0] * subDims[1] * sizeof(double));
     if (mat == NULL) {
         MPI_Abort(MPI_COMM_WORLD, 2);
@@ -146,7 +155,7 @@ int main(int argc, char** argv)
     MPI_Barrier(cartComm);
 
     double collectiveTimes[2];
-    writeCollective(cartComm, suffixedFilename, subarr_dtype, mat, subDims[0] * subDims[1], &collectiveTimes[0]);
+    writeCollective(cartComm, suffixedFilename, fileInfo, subarr_dtype, mat, subDims[0] * subDims[1], &collectiveTimes[0]);
 
     free(suffixedFilename);
     suffixedFilename = NULL;
@@ -156,7 +165,7 @@ int main(int argc, char** argv)
     MPI_Barrier(cartComm);
 
     double independentTimes[2];
-    writeIndependent(cartComm, suffixedFilename, mat, fullDims, subDims, startIdx, &independentTimes[0]);
+    writeIndependent(cartComm, suffixedFilename, fileInfo, mat, fullDims, subDims, startIdx, &independentTimes[0]);
 
     rank_printf(0, "# % 5s\t% 5s\t% 3s\t% 5s\t% 6s\t% 9s\t% 9s\t% 9s\n", "m", "n", "k", "nproc", "method", "writeTime", "closeTime", "rate");
     rank_printf(0, "  % 5d\t% 5d\t% 3d\t% 5d\t% 6s\t%0.3e\t%0.3e\t%0.3e\n", nRows, nCols, stripingFactor, commSize, "coll",
@@ -164,8 +173,10 @@ int main(int argc, char** argv)
     rank_printf(0, "  % 5d\t% 5d\t% 3d\t% 5d\t% 6s\t%0.3e\t%0.3e\t%0.3e\n", nRows, nCols, stripingFactor, commSize, "ind",
                 independentTimes[0], independentTimes[1], (double)nRows * (double)nCols * (double)sizeof(double) / independentTimes[0]);
 
+    if (fileInfo != MPI_INFO_NULL) {
+        MPI_Info_free(&fileInfo);
+    }
     free(suffixedFilename);
-
     free(mat);
 
     MPI_Finalize();
