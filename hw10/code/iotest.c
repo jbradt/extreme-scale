@@ -147,7 +147,6 @@ int main(int argc, char** argv)
 
     double collectiveTimes[2];
     writeCollective(cartComm, suffixedFilename, subarr_dtype, mat, subDims[0] * subDims[1], &collectiveTimes[0]);
-    rank_printf(0, "Times: %e %e\n", collectiveTimes[0], collectiveTimes[1]);
 
     free(suffixedFilename);
     suffixedFilename = NULL;
@@ -158,7 +157,12 @@ int main(int argc, char** argv)
 
     double independentTimes[2];
     writeIndependent(cartComm, suffixedFilename, mat, fullDims, subDims, startIdx, &independentTimes[0]);
-    rank_printf(0, "Times: %e %e\n", independentTimes[0], independentTimes[1]);
+
+    rank_printf(0, "# % 5s\t% 5s\t% 3s\t% 5s\t% 6s\t% 9s\t% 9s\t% 9s\n", "m", "n", "k", "nproc", "method", "writeTime", "closeTime", "rate");
+    rank_printf(0, "  % 5d\t% 5d\t% 3d\t% 5d\t% 6s\t%0.3e\t%0.3e\t%0.3e\n", nRows, nCols, stripingFactor, commSize, "coll",
+                collectiveTimes[0], collectiveTimes[1], (double)nRows * (double)nCols * (double)sizeof(double) / collectiveTimes[0]);
+    rank_printf(0, "  % 5d\t% 5d\t% 3d\t% 5d\t% 6s\t%0.3e\t%0.3e\t%0.3e\n", nRows, nCols, stripingFactor, commSize, "ind",
+                independentTimes[0], independentTimes[1], (double)nRows * (double)nCols * (double)sizeof(double) / independentTimes[0]);
 
     free(suffixedFilename);
 
