@@ -1,9 +1,5 @@
-# CC=clang-3.7.0
-# CFLAGS=-Wall -O0 -std=c11 -fopenmp=libomp
-
-CC=icc
-CFLAGS=-Wall -O3 -std=c11
-OMPFLAGS=-qopenmp
+CC=clang-3.7.0
+CFLAGS=-Wall -O0 -std=c11 -fopenmp=libomp
 
 SOURCES = $(wildcard *.c)
 
